@@ -8,8 +8,8 @@
   "license": "MIT",
   "homepage": "https://github.com/mr-jy/n8n-nodes-heyreach",
   "author": {
-    "name": "mr-jy",
-    "email": "mrjy@example.com"
+    "name": "Jan Zisenis",
+    "email": "info@zisenis.digital"
   },
   "repository": {
     "type": "git",
@@ -20,12 +20,14 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "npx rimraf dist && tsc && gulp build:icons",
-    "dev": "tsc --watch",
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
     "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "release": "release-it",
+    "prepublishOnly": "npm run build && npm run lint"
   },
   "files": [
     "dist"
@@ -40,12 +42,18 @@
       "dist/nodes/HeyReachTrigger/HeyReachTrigger.node.js"
     ]
   },
+  "release-it": {
+    "hooks": {
+      "before:init": "npm run lint && npm run build"
+    }
+  },
   "devDependencies": {
+    "@n8n/node-cli": "*",
     "@typescript-eslint/parser": "~8.32.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.32.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
-    "gulp": "^5.0.0",
     "prettier": "^3.5.3",
+    "release-it": "^19.0.4",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
