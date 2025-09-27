@@ -10,7 +10,7 @@ export class HeyReachApi implements ICredentialType {
 
 	displayName = 'HeyReach API';
 
-	documentationUrl = 'https://docs.heyreach.io';
+	documentationUrl = 'heyreach';
 
 	properties: INodeProperties[] = [
 		{

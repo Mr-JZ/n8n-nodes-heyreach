@@ -1,6 +1,6 @@
 {
-	"name": "n8n-nodes-heyreach",
-	"version": "0.1.0",
+	"name": "@zisenis-digital/n8n-nodes-heyreach",
+	"version": "1.1.0",
 	"description": "n8n community node for HeyReach LinkedIn automation platform",
 	"keywords": [
 		"n8n-community-node-package"
