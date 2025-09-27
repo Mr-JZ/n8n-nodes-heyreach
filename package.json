@@ -1,62 +1,62 @@
 {
-  "name": "n8n-nodes-heyreach",
-  "version": "0.1.0",
-  "description": "n8n community node for HeyReach LinkedIn automation platform",
-  "keywords": [
-    "n8n-community-node-package"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/mr-jy/n8n-nodes-heyreach",
-  "author": {
-    "name": "Jan Zisenis",
-    "email": "info@zisenis.digital"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mr-jy/n8n-nodes-heyreach.git"
-  },
-  "engines": {
-    "node": ">=20.15"
-  },
-  "main": "index.js",
-  "scripts": {
-    "build": "n8n-node build",
-    "build:watch": "tsc --watch",
-    "dev": "n8n-node dev",
-    "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
-    "release": "release-it",
-    "prepublishOnly": "npm run build && npm run lint"
-  },
-  "files": [
-    "dist"
-  ],
-  "n8n": {
-    "n8nNodesApiVersion": 1,
-    "credentials": [
-      "dist/credentials/HeyReachApi.credentials.js"
-    ],
-    "nodes": [
-      "dist/nodes/HeyReach/HeyReach.node.js",
-      "dist/nodes/HeyReachTrigger/HeyReachTrigger.node.js"
-    ]
-  },
-  "release-it": {
-    "hooks": {
-      "before:init": "npm run lint && npm run build"
-    }
-  },
-  "devDependencies": {
-    "@n8n/node-cli": "*",
-    "@typescript-eslint/parser": "~8.32.0",
-    "eslint": "^9.32.0",
-    "eslint-plugin-n8n-nodes-base": "^1.16.3",
-    "prettier": "^3.5.3",
-    "release-it": "^19.0.4",
-    "typescript": "^5.8.2"
-  },
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  }
+	"name": "n8n-nodes-heyreach",
+	"version": "0.1.0",
+	"description": "n8n community node for HeyReach LinkedIn automation platform",
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/mr-jy/n8n-nodes-heyreach",
+	"author": {
+		"name": "zisenis-digital",
+		"email": "info@zisenis.digital"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mr-jy/n8n-nodes-heyreach.git"
+	},
+	"engines": {
+		"node": ">=20.15"
+	},
+	"main": "index.js",
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"format": "prettier nodes credentials --write",
+		"lint": "eslint nodes credentials package.json",
+		"lintfix": "eslint nodes credentials package.json --fix",
+		"release": "release-it",
+		"prepublishOnly": "npm run build && npm run lint"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/HeyReachApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/HeyReach/HeyReach.node.js",
+			"dist/nodes/HeyReachTrigger/HeyReachTrigger.node.js"
+		]
+	},
+	"release-it": {
+		"hooks": {
+			"before:init": "npm run lint && npm run build"
+		}
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "*",
+		"@typescript-eslint/parser": "~8.32.0",
+		"eslint": "^9.32.0",
+		"eslint-plugin-n8n-nodes-base": "^1.16.3",
+		"prettier": "^3.5.3",
+		"release-it": "^19.0.4",
+		"typescript": "^5.8.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
 }
