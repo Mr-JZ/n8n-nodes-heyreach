@@ -93,10 +93,22 @@ export class HeyReach implements INodeType {
 						action: 'Add leads to a campaign',
 					},
 					{
+						name: 'Add Leads V2',
+						value: 'addLeadsV2',
+						description: 'Add leads to a campaign (enhanced version)',
+						action: 'Add leads to a campaign v2',
+					},
+					{
 						name: 'Get',
 						value: 'get',
 						description: 'Get a campaign by ID',
 						action: 'Get a campaign',
+					},
+					{
+						name: 'Get Campaigns for Lead',
+						value: 'getCampaignsForLead',
+						description: 'Get all campaigns where a lead is enrolled',
+						action: 'Get campaigns for a lead',
 					},
 					{
 						name: 'Get Leads',
@@ -121,6 +133,12 @@ export class HeyReach implements INodeType {
 						value: 'resume',
 						description: 'Resume a campaign',
 						action: 'Resume a campaign',
+					},
+					{
+						name: 'Stop Lead',
+						value: 'stopLead',
+						description: 'Stop a lead\'s progression in a campaign',
+						action: 'Stop a lead in campaign',
 					},
 				],
 				default: 'getAll',
@@ -356,7 +374,7 @@ export class HeyReach implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['campaign'],
-						operation: ['get', 'pause', 'resume', 'addLeads', 'getLeads'],
+						operation: ['get', 'pause', 'resume', 'addLeads', 'addLeadsV2', 'getLeads', 'stopLead'],
 					},
 				},
 				default: 0,
@@ -391,6 +409,243 @@ export class HeyReach implements INodeType {
 				default: '',
 				placeholder: 'tag1,tag2,tag3',
 				description: 'Comma-separated list of tags',
+			},
+
+			// Campaign - Stop Lead Fields
+			{
+				displayName: 'Lead Member ID',
+				name: 'leadMemberId',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['stopLead'],
+					},
+				},
+				default: '',
+				description: 'The LinkedIn ID of the lead (found as linkedin_id in API responses)',
+			},
+			{
+				displayName: 'Lead URL',
+				name: 'leadUrl',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['stopLead'],
+					},
+				},
+				default: '',
+				placeholder: 'https://www.linkedin.com/in/john-doe',
+				description: 'The LinkedIn URL for the lead',
+			},
+
+			// Campaign - Get Campaigns for Lead Fields
+			{
+				displayName: 'Lead Identifier',
+				name: 'leadIdentifierType',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['getCampaignsForLead'],
+					},
+				},
+				options: [
+					{
+						name: 'Email',
+						value: 'email',
+					},
+					{
+						name: 'LinkedIn ID',
+						value: 'linkedinId',
+					},
+					{
+						name: 'Profile URL',
+						value: 'profileUrl',
+					},
+				],
+				default: 'email',
+				description: 'How to identify the lead',
+			},
+			{
+				displayName: 'Email',
+				name: 'leadEmailForCampaigns',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['getCampaignsForLead'],
+						leadIdentifierType: ['email'],
+					},
+				},
+				default: '',
+				placeholder: 'john@example.com',
+				description: "Lead's email address",
+			},
+			{
+				displayName: 'LinkedIn ID',
+				name: 'leadLinkedInIdForCampaigns',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['getCampaignsForLead'],
+						leadIdentifierType: ['linkedinId'],
+					},
+				},
+				default: '',
+				description: "Lead's LinkedIn ID",
+			},
+			{
+				displayName: 'Profile URL',
+				name: 'leadProfileUrlForCampaigns',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['getCampaignsForLead'],
+						leadIdentifierType: ['profileUrl'],
+					},
+				},
+				default: '',
+				placeholder: 'https://www.linkedin.com/in/john-doe',
+				description: "Lead's LinkedIn profile URL",
+			},
+
+			// Campaign - Add Leads Fields
+			{
+				displayName: 'Lead Data',
+				name: 'leadData',
+				type: 'collection',
+				placeholder: 'Add Lead Data',
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['addLeads', 'addLeadsV2'],
+					},
+				},
+				default: {},
+				options: [
+					{
+						displayName: 'About',
+						name: 'about',
+						type: 'string',
+						typeOptions: {
+							rows: 4,
+						},
+						default: '',
+						description: "Lead's about section",
+					},
+					{
+						displayName: 'Company Name',
+						name: 'companyName',
+						type: 'string',
+						default: '',
+						description: "Lead's company name",
+					},
+					{
+						displayName: 'Email Address',
+						name: 'emailAddress',
+						type: 'string',
+						default: '',
+						placeholder: 'john@example.com',
+						description: "Lead's email address",
+					},
+					{
+						displayName: 'First Name',
+						name: 'firstName',
+						type: 'string',
+						default: '',
+						description: "Lead's first name",
+					},
+					{
+						displayName: 'Last Name',
+						name: 'lastName',
+						type: 'string',
+						default: '',
+						description: "Lead's last name",
+					},
+					{
+						displayName: 'LinkedIn Account ID',
+						name: 'linkedInAccountId',
+						type: 'number',
+						default: 0,
+						description: 'The LinkedIn account ID to use for this lead',
+						required: true,
+					},
+					{
+						displayName: 'Location',
+						name: 'location',
+						type: 'string',
+						default: '',
+						description: "Lead's location",
+					},
+					{
+						displayName: 'Position',
+						name: 'position',
+						type: 'string',
+						default: '',
+						description: "Lead's job position",
+					},
+					{
+						displayName: 'Profile URL',
+						name: 'profileUrl',
+						type: 'string',
+						default: '',
+						placeholder: 'https://www.linkedin.com/in/john-doe',
+						description: "Lead's LinkedIn profile URL",
+						required: true,
+					},
+					{
+						displayName: 'Summary',
+						name: 'summary',
+						type: 'string',
+						typeOptions: {
+							rows: 3,
+						},
+						default: '',
+						description: "Lead's professional summary",
+					},
+				],
+			},
+			{
+				displayName: 'Custom User Fields',
+				name: 'customUserFields',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						resource: ['campaign'],
+						operation: ['addLeads', 'addLeadsV2'],
+					},
+				},
+				default: {},
+				placeholder: 'Add Custom Field',
+				options: [
+					{
+						name: 'fields',
+						displayName: 'Custom Fields',
+						values: [
+							{
+								displayName: 'Field Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Name of the custom field',
+							},
+							{
+								displayName: 'Field Value',
+								name: 'value',
+								type: 'string',
+								default: '',
+								description: 'Value of the custom field',
+							},
+						],
+					},
+				],
 			},
 
 			// List Fields
@@ -789,7 +1044,7 @@ export class HeyReach implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['campaign', 'linkedinAccount', 'list', 'inbox'],
-						operation: ['getAll', 'getLeads', 'getCompanies', 'getListsForLead', 'getConversations', 'getConversationsV2'],
+						operation: ['getAll', 'getLeads', 'getCompanies', 'getListsForLead', 'getConversations', 'getConversationsV2', 'getCampaignsForLead'],
 					},
 				},
 				default: false,
@@ -803,7 +1058,7 @@ export class HeyReach implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['campaign', 'linkedinAccount', 'list', 'inbox'],
-						operation: ['getAll', 'getLeads', 'getCompanies', 'getListsForLead', 'getConversations', 'getConversationsV2'],
+						operation: ['getAll', 'getLeads', 'getCompanies', 'getListsForLead', 'getConversations', 'getConversationsV2', 'getCampaignsForLead'],
 						returnAll: [false],
 					},
 				},
@@ -975,6 +1230,111 @@ export class HeyReach implements INodeType {
 							);
 							returnData.push(...(responseData.items || responseData));
 						}
+					}
+
+					if (operation === 'stopLead') {
+						const campaignId = this.getNodeParameter('campaignId', i);
+						const leadMemberId = this.getNodeParameter('leadMemberId', i) as string;
+						const leadUrl = this.getNodeParameter('leadUrl', i) as string;
+
+						const body: IDataObject = {
+							campaignId,
+							leadMemberId,
+							leadUrl,
+						};
+
+						const responseData = await heyReachApiRequest.call(
+							this,
+							'POST',
+							'/api/public/campaign/StopLeadInCampaign',
+							body,
+						);
+						returnData.push({ success: true, campaignId, leadMemberId, leadUrl, ...responseData });
+					}
+
+					if (operation === 'getCampaignsForLead') {
+						const returnAll = this.getNodeParameter('returnAll', i);
+						const leadIdentifierType = this.getNodeParameter('leadIdentifierType', i) as string;
+
+						const body: IDataObject = {
+							offset: 0,
+							limit: returnAll ? 100 : this.getNodeParameter('limit', i),
+						};
+
+						// Add the appropriate identifier
+						if (leadIdentifierType === 'email') {
+							body.email = this.getNodeParameter('leadEmailForCampaigns', i) as string;
+						} else if (leadIdentifierType === 'linkedinId') {
+							body.linkedinId = this.getNodeParameter('leadLinkedInIdForCampaigns', i) as string;
+						} else if (leadIdentifierType === 'profileUrl') {
+							body.profileUrl = this.getNodeParameter('leadProfileUrlForCampaigns', i) as string;
+						}
+
+						if (returnAll) {
+							const campaigns = await heyReachApiRequestAllItems.call(
+								this,
+								'POST',
+								'/api/public/campaign/GetCampaignsForLead',
+								body,
+							);
+							returnData.push(...campaigns);
+						} else {
+							const responseData = await heyReachApiRequest.call(
+								this,
+								'POST',
+								'/api/public/campaign/GetCampaignsForLead',
+								body,
+							);
+							returnData.push(...(responseData.items || responseData));
+						}
+					}
+
+					if (operation === 'addLeads' || operation === 'addLeadsV2') {
+						const campaignId = this.getNodeParameter('campaignId', i);
+						const leadData = this.getNodeParameter('leadData', i) as IDataObject;
+						const customFields = this.getNodeParameter('customUserFields', i) as IDataObject;
+
+						// Build lead object
+						const lead: IDataObject = {
+							firstName: leadData.firstName || '',
+							lastName: leadData.lastName || '',
+							profileUrl: leadData.profileUrl || '',
+							location: leadData.location || '',
+							summary: leadData.summary || '',
+							companyName: leadData.companyName || '',
+							position: leadData.position || '',
+							about: leadData.about || '',
+							emailAddress: leadData.emailAddress || '',
+						};
+
+						// Add custom fields if provided
+						if (customFields.fields && Array.isArray(customFields.fields)) {
+							lead.customUserFields = customFields.fields;
+						}
+
+						const linkedInAccountId = leadData.linkedInAccountId || 0;
+
+						const body: IDataObject = {
+							campaignId,
+							accountLeadPairs: [
+								{
+									lead,
+									linkedInAccountId,
+								},
+							],
+						};
+
+						const endpoint = operation === 'addLeadsV2'
+							? '/api/public/campaign/AddLeadsToCampaignV2'
+							: '/api/public/campaign/AddLeadsToCampaign';
+
+						const responseData = await heyReachApiRequest.call(
+							this,
+							'POST',
+							endpoint,
+							body,
+						);
+						returnData.push({ success: true, campaignId, ...responseData });
 					}
 				}
 
