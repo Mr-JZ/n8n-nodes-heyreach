@@ -38,3 +38,7 @@ uv.lock
 # Scripts directory outputs
 scripts/*.json
 scripts/.venv/
+
+# Test files with API keys
+test_webhook.sh
+test_webhook_api.py

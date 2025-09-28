@@ -60,8 +60,8 @@ export class HeyReachTrigger implements INodeType {
 				displayName: 'Webhook Name',
 				name: 'webhookName',
 				type: 'string',
-				default: 'n8n HeyReach Webhook',
-				description: 'Name for the webhook in HeyReach',
+				default: 'n8n Webhook',
+				description: 'Name for the webhook in HeyReach (max 25 characters)',
 			},
 		],
 	};
@@ -103,8 +103,18 @@ export class HeyReachTrigger implements INodeType {
 
 				// Create a webhook for each event type
 				for (const eventType of events) {
+					// Ensure webhook name doesn't exceed 25 characters (API limit)
+					let finalWebhookName = webhookName;
+					if (events.length > 1) {
+						// If multiple events, abbreviate the event type
+						const eventAbbr = eventType.split('_').map(word => word[0]).join('');
+						finalWebhookName = `${webhookName.substring(0, 20)}-${eventAbbr}`;
+					}
+					// Ensure final name is within 25 character limit
+					finalWebhookName = finalWebhookName.substring(0, 25);
+
 					const body: IDataObject = {
-						webhookName: `${webhookName} - ${eventType}`,
+						webhookName: finalWebhookName,
 						webhookUrl,
 						eventType,
 						campaignIds,
@@ -115,16 +125,17 @@ export class HeyReachTrigger implements INodeType {
 					try {
 						const responseData = await heyReachApiRequest.call(this, 'POST', endpoint, body);
 
-						// Store the webhook ID(s) - for simplicity, we'll store the first one
+						// Store the webhook ID(s) - API returns { webhookId: number }
 						// In a more complex implementation, you might want to store all webhook IDs
+						const webhookId = responseData.webhookId || responseData.id;
 						if (!webhookData.webhookIds) {
 							webhookData.webhookIds = [];
 						}
-						(webhookData.webhookIds as number[]).push(responseData.id);
+						(webhookData.webhookIds as number[]).push(webhookId);
 
 						// Store first webhook ID for backward compatibility
 						if (!webhookData.webhookId) {
-							webhookData.webhookId = responseData.id;
+							webhookData.webhookId = webhookId;
 						}
 					} catch (error) {
 						throw error;
