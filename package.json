@@ -1,19 +1,19 @@
 {
 	"name": "@zisenis-digital/n8n-nodes-heyreach",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "n8n community node for HeyReach LinkedIn automation platform",
 	"keywords": [
 		"n8n-community-node-package"
 	],
 	"license": "MIT",
-	"homepage": "https://github.com/mr-jy/n8n-nodes-heyreach",
+	"homepage": "https://github.com/mr-jz/n8n-nodes-heyreach",
 	"author": {
 		"name": "zisenis-digital",
 		"email": "info@zisenis.digital"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/mr-jy/n8n-nodes-heyreach.git"
+		"url": "https://github.com/mr-jz/n8n-nodes-heyreach.git"
 	},
 	"engines": {
 		"node": ">=20.15"
