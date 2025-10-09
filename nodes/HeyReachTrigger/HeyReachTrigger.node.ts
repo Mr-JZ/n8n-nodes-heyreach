@@ -237,27 +237,16 @@ export class HeyReachTrigger implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-		const bodyData = this.getBodyData() as IDataObject;
+		const bodyData = this.getBodyData();
 		const events = this.getNodeParameter('events') as string[];
 
-		// Check if the event type matches what we're listening for
 		const eventType = bodyData.eventType as string;
 		if (!eventType || !events.includes(eventType)) {
-			// Return empty response to ignore this event
-			return {
-				workflowData: [[]],
-			};
+			return {};
 		}
 
-		// Return the webhook data to the workflow
 		return {
-			workflowData: [
-				[
-					{
-						json: bodyData,
-					},
-				],
-			],
+			workflowData: [this.helpers.returnJsonArray(bodyData)],
 		};
 	}
 }
