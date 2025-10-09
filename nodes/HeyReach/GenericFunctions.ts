@@ -50,24 +50,24 @@ export async function heyReachApiRequestAllItems(
 	query: IDataObject = {},
 ): Promise<any[]> {
 	const returnData: IDataObject[] = [];
-	let offset = 0;
-	const limit = 100;
+	let pageNumber = 0;
+	const pageSize = 100;
 
 	let responseData;
 	do {
-		const requestBody = { ...body, offset, limit };
+		const requestBody = { ...body, pageNumber, pageSize };
 		responseData = await heyReachApiRequest.call(this, method, endpoint, requestBody, query);
 
 		if (responseData.items && Array.isArray(responseData.items)) {
 			returnData.push(...responseData.items);
-			offset += limit;
+			pageNumber++;
 		} else if (Array.isArray(responseData)) {
 			returnData.push(...responseData);
 			break;
 		} else {
 			break;
 		}
-	} while (responseData.items && responseData.items.length === limit);
+	} while (responseData.items && responseData.items.length === pageSize);
 
 	return returnData;
 }
