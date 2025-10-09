@@ -65,10 +65,25 @@ export async function executeList(
 		const listId = this.getNodeParameter('listId', i);
 		const returnAll = this.getNodeParameter('returnAll', i);
 
+		let limit = returnAll ? 100 : this.getNodeParameter('limit', i);
+
+		if (returnAll) {
+			const listInfo = await heyReachApiRequest.call(
+				this,
+				'GET',
+				'/api/public/list/GetById',
+				{},
+				{ listId },
+			);
+			if (listInfo.totalItemsCount) {
+				limit = listInfo.totalItemsCount;
+			}
+		}
+
 		const body: IDataObject = {
 			listId,
 			offset: 0,
-			limit: returnAll ? 100 : this.getNodeParameter('limit', i),
+			limit,
 		};
 
 		if (returnAll) {
