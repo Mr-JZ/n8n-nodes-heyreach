@@ -70,55 +70,18 @@ export class HeyReachTrigger implements INodeType {
 		default: {
 			async checkExists(this: IHookFunctions): Promise<boolean> {
 				const webhookData = this.getWorkflowStaticData('node');
-				const events = this.getNodeParameter('events') as string[];
-				const campaignIdsParam = this.getNodeParameter('campaignIds', '') as string;
 
-				// If no webhook stored, it doesn't exist
-				if (webhookData.webhookIds === undefined || !(webhookData.webhookIds as number[]).length) {
+				if (webhookData.webhookIds === undefined) {
 					return false;
 				}
 
-				// Check if configuration has changed
-				const storedEvents = webhookData.webhookEvents as string[] || [];
-				const storedCampaignIds = webhookData.webhookCampaignIds as string || '';
-
-				// If events or campaigns changed, webhook needs to be recreated
-				if (JSON.stringify(events.sort()) !== JSON.stringify(storedEvents.sort()) ||
-					campaignIdsParam !== storedCampaignIds) {
-					// Configuration changed, delete old webhooks
-					// Delete existing webhooks
-					const webhookIds = (webhookData.webhookIds as number[]) || [];
-					for (const webhookId of webhookIds) {
-						const endpoint = `/api/public/webhooks/DeleteWebhook`;
-						try {
-							await heyReachApiRequest.call(this, 'DELETE', endpoint, {}, { webhookId });
-						} catch (error) {
-							// Continue even if deletion fails
-						}
-					}
-					delete webhookData.webhookIds;
-					delete webhookData.webhookEvents;
-					delete webhookData.webhookCampaignIds;
-					return false;
-				}
-
-				// Verify all webhooks still exist
 				const webhookIds = webhookData.webhookIds as number[];
+
 				for (const webhookId of webhookIds) {
 					const endpoint = `/api/public/webhooks/GetWebhookById`;
 					try {
 						await heyReachApiRequest.call(this, 'GET', endpoint, {}, { webhookId });
 					} catch (error) {
-						// Webhook doesn't exist, need to recreate all
-						// Delete remaining webhooks
-						for (const id of webhookIds) {
-							const deleteEndpoint = `/api/public/webhooks/DeleteWebhook`;
-							try {
-								await heyReachApiRequest.call(this, 'DELETE', deleteEndpoint, {}, { webhookId: id });
-							} catch (deleteError) {
-								// Continue even if deletion fails
-							}
-						}
 						delete webhookData.webhookIds;
 						delete webhookData.webhookEvents;
 						delete webhookData.webhookCampaignIds;
