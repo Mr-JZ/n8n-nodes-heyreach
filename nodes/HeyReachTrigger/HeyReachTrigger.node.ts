@@ -203,7 +203,7 @@ export class HeyReachTrigger implements INodeType {
 		const bodyData = this.getBodyData();
 		const events = this.getNodeParameter('events') as string[];
 
-		const eventType = bodyData.eventType as string;
+		const eventType = (bodyData.event_type as string)?.toUpperCase();
 		if (!eventType || !events.includes(eventType)) {
 			return {};
 		}
