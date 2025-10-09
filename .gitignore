@@ -42,3 +42,5 @@ scripts/.venv/
 # Test files with API keys
 test_webhook.sh
 test_webhook_api.py
+.claude/commands
+.specify
