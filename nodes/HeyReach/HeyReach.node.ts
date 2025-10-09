@@ -196,34 +196,34 @@ export class HeyReach implements INodeType {
 				description: 'LinkedIn profile URL of the lead to check',
 			},
 			{
-				displayName: 'Page Number',
-				name: 'pageNumber',
-				type: 'number',
+				displayName: 'Return All',
+				name: 'returnAll',
+				type: 'boolean',
 				displayOptions: {
 					show: {
 						resource: ['myNetwork'],
 						operation: ['getNetwork'],
 					},
 				},
-				default: 0,
-				description: 'Page number for pagination (0-based)',
+				default: false,
+				description: 'Whether to return all results or only up to a given limit',
 			},
 			{
-				displayName: 'Page Size',
-				name: 'pageSize',
+				displayName: 'Limit',
+				name: 'limit',
 				type: 'number',
 				displayOptions: {
 					show: {
 						resource: ['myNetwork'],
 						operation: ['getNetwork'],
+						returnAll: [false],
 					},
 				},
-				default: 100,
 				typeOptions: {
 					minValue: 1,
-					maxValue: 100,
 				},
-				description: 'Number of connections per page (max 100)',
+				default: 50,
+				description: 'Max number of results to return',
 			},
 
 			// Shared pagination fields
@@ -432,27 +432,30 @@ async function executeMyNetwork(
 
 		if (operation === 'getNetwork') {
 			const senderAccountId = this.getNodeParameter('senderAccountId', i) as number;
-			const pageNumber = this.getNodeParameter('pageNumber', i) as number;
-			const pageSize = this.getNodeParameter('pageSize', i) as number;
+			const returnAll = this.getNodeParameter('returnAll', i);
 
 			const body: IDataObject = {
 				senderId: senderAccountId,
-				pageNumber,
-				pageSize,
+				pageNumber: 0,
+				pageSize: returnAll ? 100 : this.getNodeParameter('limit', i),
 			};
 
-			const responseData = await heyReachApiRequest.call(
-				this,
-				'POST',
-				'/api/public/MyNetwork/GetMyNetworkForSender',
-				body,
-			);
-
-			// If response has items array, spread it, otherwise push the whole response
-			if (responseData.items && Array.isArray(responseData.items)) {
-				returnData.push(...responseData.items);
+			if (returnAll) {
+				const connections = await heyReachApiRequestAllItems.call(
+					this,
+					'POST',
+					'/api/public/MyNetwork/GetMyNetworkForSender',
+					body,
+				);
+				returnData.push(...connections);
 			} else {
-				returnData.push(responseData);
+				const responseData = await heyReachApiRequest.call(
+					this,
+					'POST',
+					'/api/public/MyNetwork/GetMyNetworkForSender',
+					body,
+				);
+				returnData.push(...(responseData.items || responseData));
 			}
 		}
 
